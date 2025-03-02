@@ -68,30 +68,23 @@ public class StudentSerialization {
 
 //OUTPUT
 
-Test Case 1: No Cards Initially
-No cards found.
+Test Case 1: Serialize and Deserialize a valid student object.
+  
+Input: Student(1, "John Doe", 3.75)
+Expected Output:
+Student object has been serialized and saved to file.
+Student object has been deserialized.
+Deserialized Student Details:
+Student ID: 1, Name: John Doe, GPA: 3.75
+  
+Test Case 2: Try to deserialize from a non-existent file.
+Expected Output:
+Error: File not found.
+  
+Test Case 3: Handle invalid class during deserialization.
+Input: Manually modify the class file to simulate a ClassNotFoundException.
+Expected Output:
+Error: Class not found.
 
-Test Case 2: Adding Cards
-Card added: Ace of Spades
-Card added: King of Hearts
-Card added: 10 of Diamonds
-Card added: 5 of Clubs
 
-Test Case 3: Finding Cards by Suit
-King of Hearts
-
-Test Case 4: Searching Suit with No Cards
-10 of Diamonds
-
-Test Case 5: Displaying All Cards
-Ace of Spades
-King of Hearts
-10 of Diamonds
-5 of Clubs
-
-Test Case 6: Preventing Duplicate Cards
-Error: Card "King of Hearts" already exists.
-
-Test Case 7: Removing a Card
-Card removed: 10 of Diamonds
 
