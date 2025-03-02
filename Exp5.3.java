@@ -1,48 +1,174 @@
 Menu-based Java application that allows you to add employee details, display all employees, and exit. The employee details will be stored in a file, and the program will
 read the file to display the stored employee information.
 
-Steps:
-1. Create an Employee class with fields like name, id, designation, and salary.
-2. Create a menu with three options:
-Add an Employee
-Display All Employees
-Exit
-3. Store Employee Data in a File: Serialize the employee objects and store them in a file.
-4. Read Employee Data from the File: Deserialize the employee objects from the file and display the details.
-5. Handle Exceptions: Handle file I/O exceptions.
+//Code
+
+package javaSem6;
+
+import java.io.*;
+import java.util.*;
+
+// Employees class implementing Serializable
+class Employees implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private int id;
+    private String name;
+    private String designation;
+    private double salary;
+
+    public Employees(int id, String name, String designation, double salary) {
+        this.id = id;
+        this.name = name;
+        this.designation = designation;
+        this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee ID: " + id + ", Name: " + name + ", Designation: " + designation + ", Salary: " + salary;
+    }
+}
+
+public class EmployeeManagement {
+    private static final String FILE_NAME = "employees.dat";
+
+    // Method to add an employee
+    public static void addEmployee() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter Employee ID: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        System.out.print("Enter Name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter Designation: ");
+        String designation = scanner.nextLine();
+        System.out.print("Enter Salary: ");
+        double salary = scanner.nextDouble();
+
+        Employees employee = new Employees(id, name, designation, salary);
+        saveEmployeeToFile(employee);
+        System.out.println("Employee added successfully!\n");
+    }
+
+    // Method to save an employee to a file
+    private static void saveEmployeeToFile(Employees employee) {
+        List<Employees> employees = readEmployeesFromFile(); // Read existing employees
+        employees.add(employee); // Add new employee
+
+        // Write entire list back to the file (overwriting)
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(employees);
+        } catch (IOException e) {
+            System.err.println("Error saving employee: " + e.getMessage());
+        }
+    }
+
+    // Method to display all employees
+    public static void displayAllEmployees() {
+        List<Employees> employees = readEmployeesFromFile();
+        if (employees.isEmpty()) {
+            System.out.println("No employees found.\n");
+        } else {
+            System.out.println("Employee List:");
+            employees.forEach(System.out::println);
+            System.out.println();
+        }
+    }
+
+    // Method to read employees from file
+    private static List<Employees> readEmployeesFromFile() {
+        List<Employees> employees = new ArrayList<>();
+        if (!new File(FILE_NAME).exists()) {
+            return employees; // Return empty list if file does not exist
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            Object obj = ois.readObject();
+            if (obj instanceof List<?>) {
+                employees = (List<Employees>) obj; // Cast safely
+            }
+        } catch (EOFException ignored) {
+            // End of file reached
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error reading employees: " + e.getMessage());
+        }
+        return employees;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("1. Add Employee");
+            System.out.println("2. Display All Employees");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1 -> addEmployee();
+                case 2 -> displayAllEmployees();
+                case 3 -> {
+                    System.out.println("Exiting program.");
+                    System.exit(0);
+                }
+                default -> System.out.println("Invalid choice. Please try again.\n");
+            }
+        }
+    }
+}
 
 
 
----Implementation
-  
-Employee Class: This class contains details like name, id, designation, and salary. It implements Serializable to allow serialization of Employee objects.
-addEmployee(): This method takes input from the user for an employee's details, creates an Employee object, and saves it to a file using ObjectOutputStream.
-saveEmployeeToFile(): This method appends employee details to a file. The file is opened in append mode (true parameter in FileOutputStream).
-displayAllEmployees(): This method reads all employee objects from the file and prints their details.
-readEmployeesFromFile(): This method reads the employee objects from the file using ObjectInputStream and stores them in a list. 
-The loop continues until the end of the file is reached (IOFException).
+//OUTPUT
 
-
-
-
-Test Cases:
-
-Test Case 1: Add a new employee and display all employees.
-Steps: Select option 1 to add a new employee, then select option 2 to display all employees.
-Input:
-Employee Name: John Doe
-Employee ID: 101
-Designation: Software Engineer
-Salary: 50000
-  
-Expected Output:
+1. Add Employee
+2. Display All Employees
+3. Exit
+Enter your choice: 1
+Enter Employee ID: 17184
+Enter Name: Dipendra
+Enter Designation: Software engineer
+Enter Salary: 15000
 Employee added successfully!
-Employee ID: 101, Name: John Doe, Designation: Software Engineer, Salary: 50000.0
 
-Test Case 2: Try adding multiple employees and display all of them.
-Steps: Add multiple employees (using option 1) and then display all employees (using option 2).
-Expected Output:
+1. Add Employee
+2. Display All Employees
+3. Exit
+Enter your choice: 1
+Enter Employee ID: 13906
+Enter Name: Om
+Enter Designation: Web developer
+Enter Salary: 17000
 Employee added successfully!
-Employee ID: 101, Name: John Doe, Designation: Software Engineer, Salary: 50000.0
+
+1. Add Employee
+2. Display All Employees
+3. Exit
+Enter your choice: 1
+Enter Employee ID: 10790
+Enter Name: Sanjay
+Enter Designation: Full stack developer
+Enter Salary: 16000
 Employee added successfully!
-Employee ID: 102, Name: Jane Smith, Designation: Manager, Salary: 75000.0
+
+1. Add Employee
+2. Display All Employees
+3. Exit
+Enter your choice: 1
+Enter Employee ID: 50206
+Enter Name: Sumantra
+Enter Designation: Software developer
+Enter Salary: 17000
+Employee added successfully!
+
+1. Add Employee
+2. Display All Employees
+3. Exit
+Enter your choice: 2
+Employee List:
+Employee ID: 17184, Name: Dipendra, Designation: Software engineer, Salary: 15000.0
+Employee ID: 13906, Name: Om, Designation: Web developer, Salary: 17000.0
+Employee ID: 10790, Name: Sanjay, Designation: Full stack developer, Salary: 16000.0
+Employee ID: 50206, Name: Sumantra, Designation: Software developer, Salary: 17000.0
+
+
