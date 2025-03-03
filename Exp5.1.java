@@ -1,22 +1,65 @@
-Question Explanation:
+import java.util.ArrayList;
+import java.util.List;
 
-writing a Java program to calculate the sum of a list of integers using autoboxing and unboxing, along with methods to parse strings into their respective wrapper classes (e.g., Integer.parseInt()).
+public class SumCalculator {
 
-Steps to implement:
-1. Create a List of Integers: Initialize a List<Integer> to hold the integers.
-2. Autoboxing: Use autoboxing to convert primitive int values to Integer objects automatically when adding to the list.
-3. Unboxing: Use unboxing to convert Integer objects back to int for sum calculation.
-4. Parse Strings: Create a utility method to parse strings to integers using Integer.parseInt().
-5. Calculate the Sum: Use a loop or Java 8 streams to calculate the sum of the list.
+    public static Integer parseStringToInteger(String str) {
+        try {
+            return Integer.parseInt(str); 
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number format: " + str);  
+            return null;
+        }
+    }
 
-  
-Java Program:
+    public static int calculateSum(List<Integer> numbers) {
+        int sum = 0;
+        for (Integer number : numbers) {
+            if (number != null) {
+                sum += number;  
+            }
+        }
+        return sum;
+    }
 
-parseStringToInteger(): This method parses a string into an Integer. It catches any NumberFormatException if the string is not a valid number.
-calculateSum(): This method calculates the sum of a list of integers. Java automatically performs unboxing when adding Integer values to sum (an int).
+    public static void main(String[] args) {
+        
+        List<Integer> numbers = new ArrayList<>();
+        
+        numbers.add(10);
+        numbers.add(20);
+        numbers.add(30);
+
+        // Parsing strings and adding them to the list
+        numbers.add(parseStringToInteger("40"));
+        numbers.add(parseStringToInteger("50"));
+
+        // Calculating the sum of the list
+        int sum = calculateSum(numbers);
+        System.out.println("The sum of the list is: " + sum);
+
+        // Test case with strings only
+        List<Integer> stringParsedNumbers = new ArrayList<>();
+        stringParsedNumbers.add(parseStringToInteger("100"));
+        stringParsedNumbers.add(parseStringToInteger("200"));
+        stringParsedNumbers.add(parseStringToInteger("300"));
+        
+        sum = calculateSum(stringParsedNumbers);
+        System.out.println("The sum of the list is: " + sum);
+
+        // Test case with invalid input
+        List<Integer> invalidInputTest = new ArrayList<>();
+        invalidInputTest.add(parseStringToInteger("50"));
+        invalidInputTest.add(parseStringToInteger("invalid"));
+        invalidInputTest.add(parseStringToInteger("70"));
+        
+        sum = calculateSum(invalidInputTest);
+        System.out.println("The sum of the list is: " + sum);
+    }
+}
 
 
-
+//OUTPUT
 
 Test Cases:
 
